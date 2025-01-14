@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import CameraDevicesProvider from "@/providers/CameraDevicesProvider";
-import type { Metadata } from "next"; // Correct the import statement
+import type { Metadata } from "next/types"; // Correct the import statement
 import { Inter } from "next/font/google";
 import "./globals.css";
 
