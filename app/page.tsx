@@ -8,10 +8,9 @@ import FlipCamera from "@/components/FlipCamera";
 import InformationDialog from "@/components/InformationDialog";
 import RecordVideo from "@/components/RecordVideo";
 import ScreenShot from "@/components/ScreenShot";
-import Volume from "@/components/Volume";
+// import Volume from "@/components/Volume";
 import FaceModelSelect from "@/components/face-model-changer/FaceModelSelect";
 import useInterval from "@/components/hooks/useInterval";
-import ModelSelect from "@/components/model-changer/ModelSelect";
 import ModelSetting from "@/components/model-settings/ModelSetting";
 import { Separator } from "@/components/ui/separator";
 import Drawing3d from "@/lib/Drawing3d";
@@ -48,6 +47,7 @@ import {
 import { Rings } from "react-loader-spinner";
 import Webcam from "react-webcam";
 import { toast } from "sonner";
+import BackgroundDetection from "./backgroundDetection";
 
 type Props = {};
 
@@ -67,8 +67,13 @@ const Home = (props: Props) => {
     const [volume, setVolume] = useState<number>(0.8);
     const [modelLoadResult, setModelLoadResult] = useState<ModelLoadResult[]>();
     const [loading, setLoading] = useState<boolean>(false);
-    const [currentMode, setCurrentMode] = useState<number>(NO_MODE);
+    const [currentMode, setCurrentMode] = useState<number>(FACE_DETECTION_MODE);
     const [animateDelay, setAnimateDelay] = useState<number | null>(150);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const takeScreenShot = () => {};
     const recordVideo = () => {
@@ -103,7 +108,7 @@ const Home = (props: Props) => {
             const enabledModels = results.filter((result) => result.loadResult);
 
             if (enabledModels.length > 0) {
-                setCurrentMode(enabledModels[0].mode);
+                setCurrentMode(FACE_DETECTION_MODE);
             }
             setModelLoadResult(enabledModels);
         }
@@ -228,18 +233,7 @@ const Home = (props: Props) => {
         }
     };
 
-    const onModeChange = (mode: string) => {
-        const newMode: number = parseInt(mode);
-
-        if (newMode === FACE_LANDMARK_DETECTION_MODE) {
-            FaceLandmarkDetection.setDrawingMode(
-                FaceLandmarkDetection.CONNECTION_FACE_LANDMARKS_TESSELATION
-            );
-        }
-        setCurrentMode(newMode);
-    };
-
-    const canvas3dRefCallback = useCallback((element: any) => {
+    const canvas3dRefCallback = useCallback((element: HTMLCanvasElement | null) => {
         if (element !== null && !Drawing3d.isRendererInitialized()) {
             canvas3dRef.current = element;
             Drawing3d.initRenderer(element);
@@ -247,7 +241,7 @@ const Home = (props: Props) => {
         }
     }, []);
 
-    const webcamRefCallback = useCallback((element: any) => {
+    const webcamRefCallback = useCallback((element: Webcam | null) => {
         if (element != null) {
             webcamRef.current = element;
         }
@@ -297,12 +291,18 @@ const Home = (props: Props) => {
 
     return (
         <div className="flex flex-col h-screen w-screen items-center">
+            <BackgroundDetection />
+            <iframe
+                src={process.env.NEXT_PUBLIC_IFRAME_URL}
+                title="Leevea"
+                className="w-full"
+                style={{ height: "1920px", border: "none" }}
+            ></iframe>
             {/* Camera area */}
             <div
                 className={clsx(
-                    "relative h-[80%] w-[85%]",
-                    "border-primary/5 border-2 max-h-xs"
-                )}
+                    "relative h-[1%] w-[1%]"
+                                    )}
             >
                 <div className="flex relative w-full h-full">
                     {cameraDeviceProvider?.status.status ===
@@ -337,64 +337,36 @@ const Home = (props: Props) => {
                 </div>
             </div>
             {/* Bottom area */}
-            <div className="flex flex-col flex-1 w-[85%]">
+            <div className="flex flex-col flex-1 w-[85%] mt-4">
                 <div
                     className={clsx(
-                        "border-primary/5 border-2 max-h-xs",
+                        "border-0 max-h-xs",
                         "flex flex-row gap-2 justify-between",
-                        "shadow-md rounded-md p-4"
+                        "text-white bg-white"
                     )}
+                    style={{ color: "white", backgroundColor: "white" }}
                 >
                     <div className="flex flex-row gap-2">
-                        <DarkMode />
-                        <FlipCamera setMirrored={setMirrored} />
-                        <Separator orientation="vertical" className="mx-2" />
-                        {false && (
-                            <>
-                                <ScreenShot takeScreenShot={takeScreenShot} />
-                                <RecordVideo
-                                    isRecording={isRecording}
-                                    recordVideo={recordVideo}
-                                />
-                                <Separator
-                                    orientation="vertical"
-                                    className="mx-2"
-                                />
-                                <AutoRecord
-                                    isAutoRecordEnabled={isAutoRecordEnabled}
-                                    toggleAutoRecord={toggleAutoRecord}
-                                />
-                                <Separator
-                                    orientation="vertical"
-                                    className="mx-2"
-                                />
-                            </>
-                        )}
-                    </div>
-                    <div className="flex flex-row gap-2">
-                        {currentMode === FACE_LANDMARK_DETECTION_MODE && (
+                        {currentMode === FACE_DETECTION_MODE && (
                             <FaceModelSelect
                                 currentMode={currentMode.toString()}
+                                style={{ color: "white", backgroundColor: "white", borderColor: "white" }}
                             />
                         )}
-                        <ModelSelect
-                            cameraStatus={cameraDeviceProvider?.status.status}
-                            modelList={modelLoadResult}
-                            currentMode={currentMode.toString()}
-                            onModeChange={onModeChange}
-                        />
-                        <ModelSetting
+                        {/*<ModelSetting
                             cameraStatus={cameraDeviceProvider?.status.status}
                             mode={currentMode}
                         />
                         <InformationDialog />
                         <Separator orientation="vertical" className="mx-2" />
+                        
                         <Volume
                             cameraStatus={cameraDeviceProvider?.status.status}
                             volume={volume}
                             setVolume={setVolume}
                             beep={beep}
                         />
+                        */}
                     </div>
                 </div>
             </div>
