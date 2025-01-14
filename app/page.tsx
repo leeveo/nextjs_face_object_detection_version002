@@ -350,7 +350,6 @@ const Home = (props: Props) => {
                         {currentMode === FACE_DETECTION_MODE && (
                             <FaceModelSelect
                                 currentMode={currentMode.toString()}
-                                style={{ color: "white", backgroundColor: "white", borderColor: "white" }}
                             />
                         )}
                         {/*<ModelSetting
