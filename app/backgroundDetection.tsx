@@ -36,11 +36,11 @@ const BackgroundDetection = () => {
                 const facePredictions = await FaceDetection.detectFace(
                     webcamRef.current.video
                 );
-                if (facePredictions?.detections?.length > 0) {
+                if (facePredictions?.detections && facePredictions.detections.length > 0) {
                     console.log("Face detected");
                     setPersonDetected(true);
                 } else {
-                    console.log("No face detected");
+                    setPersonDetected(false);
                 }
             }
         };
