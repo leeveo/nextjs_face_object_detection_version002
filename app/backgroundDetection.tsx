@@ -65,7 +65,7 @@ const BackgroundDetection = () => {
 
     return (
         <div style={{ display: "none" }}>
-            <Webcam ref={webcamRef} />
+            <Webcam ref={webcamRef} onUserMedia={() => console.log("Webcam started in background detection")} />
         </div>
     );
 };
