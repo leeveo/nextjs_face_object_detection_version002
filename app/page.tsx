@@ -295,8 +295,8 @@ const Home = (props: Props) => {
             <iframe
                 src={process.env.NEXT_PUBLIC_IFRAME_URL}
                 title="Leevea"
-                className="w-full"
-                style={{ height: "1920px", border: "none" }}
+                className="absolute top-0 left-0 w-full h-full"
+                frameBorder="0"
             ></iframe>
             {/* Camera area */}
             <div
@@ -316,6 +316,7 @@ const Home = (props: Props) => {
                                 videoConstraints={{
                                     deviceId: cameraDeviceProvider.webcamId,
                                 }}
+                                onUserMedia={() => console.log("Webcam started")}
                             />
                             <canvas
                                 id="3d canvas"
