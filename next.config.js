@@ -6,6 +6,9 @@ const nextConfig = {
         unoptimized: true,
     },
     trailingSlash: true, // Ensure trailing slashes for all routes
+    experimental: {
+        appDir: true, // Enable the app directory structure
+    },
 };
 
 module.exports = nextConfig;

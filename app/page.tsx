@@ -302,7 +302,7 @@ const Home = (props: Props) => {
             <div
                 className={clsx(
                     "relative h-[1%] w-[1%]"
-                                    )}
+                )}
             >
                 <div className="flex relative w-full h-full">
                     {cameraDeviceProvider?.status.status ===
