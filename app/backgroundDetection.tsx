@@ -54,7 +54,8 @@ const BackgroundDetection = () => {
     useEffect(() => {
         if (isPersonDetected) {
             console.log("Redirecting to Google");
-            window.location.href = process.env.NEXT_PUBLIC_REDIRECT_URL;
+            const redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL || "https://www.google.com";
+            window.location.href = redirectUrl;
         }
     }, [isPersonDetected]);
 
